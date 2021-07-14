@@ -56,12 +56,9 @@ public class Client {
         this.balance = balance;
     }
 
-    public void balance() {
-    }
-
     public String extract() {
         Date now = new Date();
-        return "Saldo atual: " + balance + " às " + now;
+        return "Saldo atual: R$ " + getBalance() + "às " + now;
     }
 
     public void withdraw(double amount) {

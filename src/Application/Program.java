@@ -26,6 +26,7 @@ public class Program {
         if (type.equals("vip")) {
             System.out.print("Digite o número da sua conta: ");
             Integer number = sc.nextInt();
+            System.out.println(vip.getType());
             if (number == vip.getAccountNumber()) {
                 System.out.println("Conta não encontrada!");
             }

@@ -3,6 +3,7 @@ package Entities;
 import db.DB;
 
 import java.sql.*;
+import java.util.Date;
 
 public class Vip extends Client {
 
@@ -65,14 +66,40 @@ public class Vip extends Client {
 
             st = conn.createStatement();
 
-            rs = st.executeQuery("SELECT * FROM client WHERE Type = VIP ");
+            rs = st.executeQuery("SELECT * FROM client WHERE Type = 'VIP' ");
 
-            System.out.println("Name: " + getName());
+            while (rs.next()) {
+                System.out.println("Name: " + rs.getString("Name"));
+            }
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
         return super.getType();
+    }
+
+    @Override
+    public String extract() {
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+        try {
+            conn = DB.getConnection();
+
+            st = conn.createStatement();
+
+            java.util.Date now = new Date();
+
+            rs = st.executeQuery("SELECT * FROM client WHERE Type = 'VIP' ");
+
+            while (rs.next()) {
+                System.out.println("Saldo atual: " + rs.getDouble("Balance") + " às " + now);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return super.extract();
     }
 
     @Override
@@ -116,7 +143,23 @@ public class Vip extends Client {
 
     @Override
     public void transference(double amount) {
-        Double balance = getBalance() - amount - 0.08;
-        System.out.println("Saldo atual: R$ " + balance);
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+        try {
+            conn = DB.getConnection();
+
+            st = conn.createStatement();
+
+            rs = st.executeQuery("SELECT balance FROM client WHERE Type = 'VIP'");
+
+            while (rs.next()) {
+                Double balance = rs.getDouble("Balance") - amount - 0.08;
+                System.out.println("Saldo atual: R$ " + balance);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
