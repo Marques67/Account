@@ -1,104 +1,72 @@
 package Entities;
 
 import db.DB;
+import db.Factory;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Date;
 
 public class Normal extends Client {
 
     @Override
-    public Integer getAccountNumber() {
-        Connection conn = null;
-        Statement st = null;
-        ResultSet rs = null;
-        try {
-            conn = DB.getConnection();
-
-            st = conn.createStatement();
-
-            rs = st.executeQuery("SELECT AccountNumber FROM client WHERE Type = 'Normal'");
-
-            while (rs.next()) {
-                if(rs.getBoolean("AccountNumber") == true) {
-                    System.out.println("Prossiga");
-                }
-                else {
-                    System.out.println("Conta não encontrada!");
-                }
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        finally {
-            DB.closeResultSet(rs);
-            DB.closeStatement(st);
-            DB.closeConnection();
-        }
-        return super.getAccountNumber();
-    }
-
-    @Override
     public Double getBalance() {
-        Connection conn = null;
-        Statement st = null;
-        ResultSet rs = null;
         try {
-            conn = DB.getConnection();
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT balance FROM client WHERE Type = 'Normal'";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet result = stmt.executeQuery();
 
-            st = conn.createStatement();
-
-            rs = st.executeQuery("SELECT balance FROM client WHERE Type = 'Normal'");
-
-            while (rs.next()) {
-                System.out.println("Seu saldo atual é: R$ " + rs.getDouble("Balance"));
+            while (result.next()) {
+                System.out.println("Seu saldo atual é: R$ " + result.getDouble("balance"));
             }
         }
         catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
-            DB.closeResultSet(rs);
-            DB.closeStatement(st);
-            DB.closeConnection();
         }
         return super.getBalance();
     }
 
     @Override
-    public void withdraw(double amount) {
-        Connection conn = null;
-        Statement st = null;
-        ResultSet rs = null;
+    public String extract() {
         try {
-            conn = DB.getConnection();
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT balance FROM client WHERE Type = 'Normal'";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet result = stmt.executeQuery();
 
-            st = conn.createStatement();
+            java.util.Date now = new Date();
 
-            rs = st.executeQuery("SELECT balance FROM client WHERE Type = 'Normal'");
-
-            while (rs.next()) {
-                if(amount > rs.getDouble("Balance")) {
-                    System.out.println("Saque solicitado maior que o saldo em conta");
-                }
-                else {
-                    Double balance = rs.getDouble("Balance") - amount;
-                    System.out.println("Saque realizado no valor de R$ " + amount);
-                    System.out.println("Saldo atual: R$ " + balance);
-                }
+            if (result.next()) {
+                System.out.println("Saldo atual: " + result.getDouble("Balance") + " às " + now);
             }
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            DB.closeResultSet(rs);
-            DB.closeStatement(st);
-            DB.closeConnection();
+        return super.extract();
+    }
+
+    @Override
+    public void withdraw(double amount) {
+        try {
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT balance FROM client WHERE Type = 'Normal'";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet result = stmt.executeQuery();
+
+            if (result.next()) {
+                Double balance = result.getDouble("balance");
+                if(amount > balance) {
+                    System.out.println("Saque solicitado maior que o saldo em conta");
+                }
+                else {
+                    balance = balance - amount;
+                    System.out.println("Saque realizado no valor de R$ " + amount);
+                    System.out.println("Saldo atual: R$ " + balance);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -125,43 +93,54 @@ public class Normal extends Client {
     }
 
     @Override
-    public String extract() {
-        Connection conn = null;
-        Statement st = null;
-        ResultSet rs = null;
+    public Integer accountNumber(Integer accountNumber) {
         try {
-            conn = DB.getConnection();
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT Name FROM client WHERE AccountNumber = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, accountNumber);
+            ResultSet result = stmt.executeQuery();
 
-            st = conn.createStatement();
+            if (result.next() == false) {
+                System.out.println("Conta não existe");
+            }
 
-            java.util.Date now = new Date();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return accountNumber;
+    }
 
-            rs = st.executeQuery("SELECT * FROM client WHERE Type = 'Normal' ");
+    @Override
+    public void deposit(double amount) {
+        try {
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT balance FROM client WHERE Type = 'Normal'";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet result = stmt.executeQuery();
 
-            while (rs.next()) {
-                System.out.println("Saldo atual: " + rs.getDouble("Balance") + " às " + now);
+            if (result.next()) {
+                Double balance = result.getDouble("balance");
+                balance = balance + amount;
+                System.out.println("Saldo atual: R$ " + balance);
             }
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
-        return super.extract();
     }
 
     @Override
     public void transference(double amount) {
-        Connection conn = null;
-        Statement st = null;
-        ResultSet rs = null;
         try {
-            conn = DB.getConnection();
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT balance FROM client WHERE Type = 'Normal'";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet result = stmt.executeQuery();
 
-            st = conn.createStatement();
-
-            rs = st.executeQuery("SELECT balance FROM client WHERE Type = 'Normal'");
-
-            while (rs.next()) {
-                Double balance = rs.getDouble("Balance") - amount - 8.00;
+            if (result.next()) {
+                Double balance = result.getDouble("Balance");
+                balance = balance - amount - 8.00;
                 System.out.println("Saldo atual: R$ " + balance);
             }
         }
@@ -170,3 +149,4 @@ public class Normal extends Client {
         }
     }
 }
+

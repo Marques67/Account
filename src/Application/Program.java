@@ -3,9 +3,7 @@ package Application;
 import Entities.Client;
 import Entities.Normal;
 import Entities.Vip;
-import db.DB;
 
-import java.sql.Connection;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -20,17 +18,16 @@ public class Program {
         Client vip = new Vip();
         Client normal = new Normal();
 
-        System.out.println("Olá");
-        System.out.print("Digite o tipo da sua conta: ");
-        String type = sc.next();
-        if (type.equals("vip")) {
-            System.out.print("Digite o número da sua conta: ");
-            Integer number = sc.nextInt();
-            System.out.println(vip.getType());
-            if (number == vip.getAccountNumber()) {
-                System.out.println("Conta não encontrada!");
-            }
-            else {
+        System.out.print("Olá, bem vindo! Você já possui uma conta no nosso banco?");
+        String answer = sc.next();
+        if (answer.equals("Sim")) {
+            System.out.print("Digite o tipo da sua conta: ");
+            String type = sc.next();
+            if (type.equals("VIP")) {
+                System.out.print("Digite o número da sua conta: ");
+                Integer number = sc.nextInt();
+                vip.accountNumber(number);
+
                 System.out.println("Digite a opção desejada: ");
                 System.out.println("1 - Saldo");
                 System.out.println("2 - Extrato");
@@ -54,6 +51,7 @@ public class Program {
                         vip.withdraw(amount);
                         break;
                     case 4:
+                        System.out.print("Digite o valor do depósito: R$ ");
                         double deposit = sc.nextInt();
                         vip.deposit(deposit);
                         break;
@@ -68,9 +66,13 @@ public class Program {
                     case 7:
                         client.changeOfUser();
                         break;
+                }
             }
-          }
-        } else {
+            else if (type.equals("Normal")) {
+            System.out.print("Digite o número da sua conta: ");
+            Integer number = sc.nextInt();
+            normal.accountNumber(number);
+
             System.out.println("Digite a opção desejada: ");
             System.out.println("1 - Saldo");
             System.out.println("2 - Extrato");
@@ -104,6 +106,7 @@ public class Program {
                 case 6:
                     client.changeOfUser();
                     break;
+                }
             }
         }
         sc.close();

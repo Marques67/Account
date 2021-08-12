@@ -1,6 +1,7 @@
 package Entities;
 
 import db.DB;
+import db.Factory;
 
 import java.sql.*;
 import java.util.Date;
@@ -8,46 +9,15 @@ import java.util.Date;
 public class Vip extends Client {
 
     @Override
-    public Integer getAccountNumber() {
-        Connection conn = null;
-        Statement st = null;
-        ResultSet rs = null;
-        try {
-            conn = DB.getConnection();
-
-            st = conn.createStatement();
-
-            rs = st.executeQuery("SELECT AccountNumber FROM client WHERE Type = 'VIP'");
-
-            while (rs.next()) {
-                if(rs.getBoolean("AccountNumber") == true) {
-                    System.out.println("Prossiga");
-                }
-                else {
-                    System.out.println("Conta não encontrada!");
-                }
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return super.getAccountNumber();
-    }
-
-    @Override
     public Double getBalance() {
-        Connection conn = null;
-        Statement st = null;
-        ResultSet rs = null;
         try {
-            conn = DB.getConnection();
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT balance FROM client WHERE Type = 'VIP'";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet result = stmt.executeQuery();
 
-            st = conn.createStatement();
-
-            rs = st.executeQuery("SELECT balance FROM client WHERE Type = 'VIP'");
-
-            while (rs.next()) {
-                System.out.println("Seu saldo atual é: R$ " + rs.getDouble("Balance"));
+            while (result.next()) {
+                System.out.println("Seu saldo atual é: R$ " + result.getDouble("balance"));
             }
         }
         catch (SQLException e) {
@@ -57,43 +27,17 @@ public class Vip extends Client {
     }
 
     @Override
-    public String getType() {
-        Connection conn = null;
-        Statement st = null;
-        ResultSet rs = null;
-        try {
-            conn = DB.getConnection();
-
-            st = conn.createStatement();
-
-            rs = st.executeQuery("SELECT * FROM client WHERE Type = 'VIP' ");
-
-            while (rs.next()) {
-                System.out.println("Name: " + rs.getString("Name"));
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return super.getType();
-    }
-
-    @Override
     public String extract() {
-        Connection conn = null;
-        Statement st = null;
-        ResultSet rs = null;
         try {
-            conn = DB.getConnection();
-
-            st = conn.createStatement();
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT balance FROM client WHERE Type = 'VIP'";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet result = stmt.executeQuery();
 
             java.util.Date now = new Date();
 
-            rs = st.executeQuery("SELECT * FROM client WHERE Type = 'VIP' ");
-
-            while (rs.next()) {
-                System.out.println("Saldo atual: " + rs.getDouble("Balance") + " às " + now);
+            if (result.next()) {
+                System.out.println("Saldo atual: " + result.getDouble("Balance") + " às " + now);
             }
         }
         catch (SQLException e) {
@@ -104,57 +48,80 @@ public class Vip extends Client {
 
     @Override
     public void withdraw(double amount) {
-        Connection conn = null;
-        Statement st = null;
-        ResultSet rs = null;
         try {
-            conn = DB.getConnection();
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT balance FROM client WHERE Type = 'VIP'";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet result = stmt.executeQuery();
 
-            st = conn.createStatement();
-
-            rs = st.executeQuery("SELECT balance FROM client WHERE Type = 'VIP'");
-
-            while (rs.next()) {
-                if(amount > rs.getDouble("Balance")) {
-                    Double balance = rs.getDouble("Balance") - 0.01;
+            if (result.next()) {
+                Double balance = result.getDouble("balance");
+                if(amount > result.getDouble("balance")) {
+                    balance = balance - 0.01;
                     System.out.println("Saque realizado no valor de R$ " + amount);
                     System.out.println("Saldo atual: R$ " + balance);
                     System.out.println("Você está negativado!");
                 }
                 else {
-                    Double balance = rs.getDouble("Balance") - amount;
+                    balance = balance - amount;
                     System.out.println("Saque realizado no valor de R$ " + amount);
                     System.out.println("Saldo atual: R$ " + balance);
                 }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Integer accountNumber(Integer accountNumber) {
+        try {
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT Name FROM client WHERE AccountNumber = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, accountNumber);
+            ResultSet result = stmt.executeQuery();
+
+            if (result.next() == false) {
+                System.out.println("Conta não existe");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return accountNumber;
+    }
+
+    @Override
+    public void deposit(double amount) {
+        try {
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT balance FROM client WHERE Type = 'VIP'";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet result = stmt.executeQuery();
+
+            if (result.next()) {
+                Double balance = result.getDouble("balance");
+                balance = balance + amount;
+                System.out.println("Saldo atual: R$ " + balance);
             }
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
-
-        if(amount > getBalance()) {
-            Double balance = getBalance() - 0.01;
-            System.out.println(balance);
-        }
-        else {
-            System.out.println(getBalance());
-        }
     }
 
     @Override
     public void transference(double amount) {
-        Connection conn = null;
-        Statement st = null;
-        ResultSet rs = null;
         try {
-            conn = DB.getConnection();
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT balance FROM client WHERE Type = 'VIP'";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet result = stmt.executeQuery();
 
-            st = conn.createStatement();
-
-            rs = st.executeQuery("SELECT balance FROM client WHERE Type = 'VIP'");
-
-            while (rs.next()) {
-                Double balance = rs.getDouble("Balance") - amount - 0.08;
+            if (result.next()) {
+                Double balance = result.getDouble("balance");
+                balance = balance - amount - 0.08;
                 System.out.println("Saldo atual: R$ " + balance);
             }
         }

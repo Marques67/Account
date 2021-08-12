@@ -1,11 +1,5 @@
 package Entities;
 
-import db.DB;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Date;
 
 public class Client {
@@ -28,24 +22,10 @@ public class Client {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(Integer accountNumber) {
-        this.accountNumber = accountNumber;
-    }
+    public Integer getAccountNumber() { return accountNumber; }
 
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public Double getBalance() {
@@ -61,12 +41,11 @@ public class Client {
         return "Saldo atual: R$ " + getBalance() + "às " + now;
     }
 
-    public void withdraw(double amount) {
-    }
+    public void withdraw(double amount) { }
 
-    public void deposit(double amount) {
-        balance -= amount;
-    }
+    public Integer accountNumber(Integer accountNumber) { return accountNumber; }
+
+    public void deposit(double amount) { }
 
     public void transference(double amount) {
         balance -= amount;
