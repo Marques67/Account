@@ -1,7 +1,6 @@
 package Entities;
 
-import db.DB;
-import db.Factory;
+import Factory.Factory;
 
 import java.sql.*;
 import java.util.Date;
@@ -69,29 +68,7 @@ public class Normal extends Client {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public String getType() {
-        Connection conn = null;
-        Statement st = null;
-        ResultSet rs = null;
-        try {
-            conn = DB.getConnection();
-
-            st = conn.createStatement();
-
-            rs = st.executeQuery("SELECT * FROM client WHERE Type = 'Normal' ");
-
-            while (rs.next()) {
-                System.out.println("Name: " + rs.getString("Name"));
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return super.getType();
-    }
-
+    
     @Override
     public Integer accountNumber(Integer accountNumber) {
         try {
@@ -103,12 +80,33 @@ public class Normal extends Client {
 
             if (result.next() == false) {
                 System.out.println("Conta não existe");
+                System.exit(0);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return accountNumber;
+    }
+
+    @Override
+    public Integer password(Integer password) {
+        try {
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT AccountNumber FROM client WHERE passwor = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, password);
+            ResultSet result = stmt.executeQuery();
+
+            if (result.next() == false) {
+                System.out.println("Senha incorreta!");
+                System.exit(0);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return password;
     }
 
     @Override

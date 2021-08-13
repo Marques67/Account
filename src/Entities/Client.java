@@ -6,6 +6,7 @@ public class Client {
 
     private String name;
     private Integer accountNumber;
+    private Integer password;
     private String type;
     private Double balance;
 
@@ -44,6 +45,10 @@ public class Client {
     public void withdraw(double amount) { }
 
     public Integer accountNumber(Integer accountNumber) { return accountNumber; }
+
+    public Integer password(Integer password) {
+        return password;
+    }
 
     public void deposit(double amount) { }
 

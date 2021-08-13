@@ -1,7 +1,6 @@
 package Entities;
 
-import db.DB;
-import db.Factory;
+import Factory.Factory;
 
 import java.sql.*;
 import java.util.Date;
@@ -57,7 +56,7 @@ public class Vip extends Client {
             if (result.next()) {
                 Double balance = result.getDouble("balance");
                 if(amount > result.getDouble("balance")) {
-                    balance = balance - 0.01;
+                    balance = balance - 7.0;
                     System.out.println("Saque realizado no valor de R$ " + amount);
                     System.out.println("Saldo atual: R$ " + balance);
                     System.out.println("Você está negativado!");
@@ -84,12 +83,33 @@ public class Vip extends Client {
 
             if (result.next() == false) {
                 System.out.println("Conta não existe");
+                System.exit(0);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return accountNumber;
+    }
+
+    @Override
+    public Integer password(Integer password) {
+        try {
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT AccountNumber FROM client WHERE passwor = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, password);
+            ResultSet result = stmt.executeQuery();
+
+            if (result.next() == false) {
+                System.out.println("Senha incorreta!");
+                System.exit(0);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return password;
     }
 
     @Override

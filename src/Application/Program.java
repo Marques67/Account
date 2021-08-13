@@ -18,7 +18,7 @@ public class Program {
         Client vip = new Vip();
         Client normal = new Normal();
 
-        System.out.print("Olá, bem vindo! Você já possui uma conta no nosso banco?");
+        System.out.print("Olá, bem vindo! Você já possui uma conta no nosso banco? ");
         String answer = sc.next();
         if (answer.equals("Sim")) {
             System.out.print("Digite o tipo da sua conta: ");
@@ -27,6 +27,9 @@ public class Program {
                 System.out.print("Digite o número da sua conta: ");
                 Integer number = sc.nextInt();
                 vip.accountNumber(number);
+                System.out.print("Digite a senha: ");
+                Integer password = sc.nextInt();
+                vip.password(password);
 
                 System.out.println("Digite a opção desejada: ");
                 System.out.println("1 - Saldo");
@@ -69,43 +72,46 @@ public class Program {
                 }
             }
             else if (type.equals("Normal")) {
-            System.out.print("Digite o número da sua conta: ");
-            Integer number = sc.nextInt();
-            normal.accountNumber(number);
+                System.out.print("Digite o número da sua conta: ");
+                Integer number = sc.nextInt();
+                normal.accountNumber(number);
+                System.out.print("Digite a senha: ");
+                Integer password = sc.nextInt();
+                normal.password(password);
 
-            System.out.println("Digite a opção desejada: ");
-            System.out.println("1 - Saldo");
-            System.out.println("2 - Extrato");
-            System.out.println("3 - Saque");
-            System.out.println("4 - Depósito");
-            System.out.println("5 - Transferência");
-            System.out.println("6 - Trocar de usuário");
-            Integer choise = sc.nextInt();
+                System.out.println("Digite a opção desejada: ");
+                System.out.println("1 - Saldo");
+                System.out.println("2 - Extrato");
+                System.out.println("3 - Saque");
+                System.out.println("4 - Depósito");
+                System.out.println("5 - Transferência");
+                System.out.println("6 - Trocar de usuário");
+                Integer choise = sc.nextInt();
 
-            switch (choise) {
-                case 1:
-                    normal.getBalance();
-                    break;
-                case 2:
-                    normal.extract();
-                    break;
-                case 3:
-                    System.out.print("Digite o valor de saque: R$ ");
-                    double amount = sc.nextDouble();
-                    normal.withdraw(amount);
-                    break;
-                case 4:
-                    double deposit = sc.nextInt();
-                    normal.deposit(deposit);
-                    break;
-                case 5:
-                    System.out.print("Digite o valor da transferência: R$ ");
-                    double transference = sc.nextDouble();
-                    normal.transference(transference);
-                    break;
-                case 6:
-                    client.changeOfUser();
-                    break;
+                switch (choise) {
+                    case 1:
+                        normal.getBalance();
+                        break;
+                    case 2:
+                        normal.extract();
+                        break;
+                    case 3:
+                        System.out.print("Digite o valor de saque: R$ ");
+                        double amount = sc.nextDouble();
+                        normal.withdraw(amount);
+                        break;
+                    case 4:
+                        double deposit = sc.nextInt();
+                        normal.deposit(deposit);
+                        break;
+                    case 5:
+                        System.out.print("Digite o valor da transferência: R$ ");
+                        double transference = sc.nextDouble();
+                        normal.transference(transference);
+                        break;
+                    case 6:
+                        client.changeOfUser();
+                        break;
                 }
             }
         }
