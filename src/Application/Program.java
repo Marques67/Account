@@ -30,8 +30,10 @@ public class Program {
                 System.out.print("Digite a senha: ");
                 Integer password = sc.nextInt();
                 vip.password(password);
+                System.out.println();
+                vip.getName();
+                System.out.println();
 
-                System.out.println("Digite a opção desejada: ");
                 System.out.println("1 - Saldo");
                 System.out.println("2 - Extrato");
                 System.out.println("3 - Saque");
@@ -55,7 +57,7 @@ public class Program {
                         break;
                     case 4:
                         System.out.print("Digite o valor do depósito: R$ ");
-                        double deposit = sc.nextInt();
+                        double deposit = sc.nextDouble();
                         vip.deposit(deposit);
                         break;
                     case 5:
@@ -78,8 +80,10 @@ public class Program {
                 System.out.print("Digite a senha: ");
                 Integer password = sc.nextInt();
                 normal.password(password);
+                System.out.println();
+                normal.getName();
+                System.out.println();
 
-                System.out.println("Digite a opção desejada: ");
                 System.out.println("1 - Saldo");
                 System.out.println("2 - Extrato");
                 System.out.println("3 - Saque");
@@ -101,7 +105,7 @@ public class Program {
                         normal.withdraw(amount);
                         break;
                     case 4:
-                        double deposit = sc.nextInt();
+                        double deposit = sc.nextDouble();
                         normal.deposit(deposit);
                         break;
                     case 5:

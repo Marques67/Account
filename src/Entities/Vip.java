@@ -8,6 +8,24 @@ import java.util.Date;
 public class Vip extends Client {
 
     @Override
+    public String getName() {
+        try {
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT Name FROM client WHERE Type = 'VIP'";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet result = stmt.executeQuery();
+
+            if (result.next()) {
+                System.out.println("Bem-vindo " + result.getString("Name") + ". Qual transação deseja realizar? ");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return super.getName();
+    }
+
+    @Override
     public Double getBalance() {
         try {
             Connection connection = Factory.getConnection();
@@ -15,7 +33,7 @@ public class Vip extends Client {
             PreparedStatement stmt = connection.prepareStatement(sql);
             ResultSet result = stmt.executeQuery();
 
-            while (result.next()) {
+            if (result.next()) {
                 System.out.println("Seu saldo atual é: R$ " + result.getDouble("balance"));
             }
         }
@@ -141,7 +159,7 @@ public class Vip extends Client {
 
             if (result.next()) {
                 Double balance = result.getDouble("balance");
-                balance = balance - amount - 0.08;
+                balance = balance - amount - 0.80;
                 System.out.println("Saldo atual: R$ " + balance);
             }
         }

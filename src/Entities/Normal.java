@@ -8,6 +8,24 @@ import java.util.Date;
 public class Normal extends Client {
 
     @Override
+    public String getName() {
+        try {
+            Connection connection = Factory.getConnection();
+            String sql = "SELECT Name FROM client WHERE Type = 'Normal'";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet result = stmt.executeQuery();
+
+            if (result.next()) {
+                System.out.println("Bem-vindo " + result.getString("Name") + ". Qual transação deseja realizar? ");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return super.getName();
+    }
+
+    @Override
     public Double getBalance() {
         try {
             Connection connection = Factory.getConnection();
@@ -68,7 +86,7 @@ public class Normal extends Client {
             e.printStackTrace();
         }
     }
-    
+
     @Override
     public Integer accountNumber(Integer accountNumber) {
         try {
