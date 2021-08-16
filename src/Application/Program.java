@@ -18,7 +18,7 @@ public class Program {
         Client vip = new Vip();
         Client normal = new Normal();
 
-        System.out.print("Olá, bem vindo! Você já possui uma conta no nosso banco? ");
+        System.out.print("Olá! Você já possui uma conta no nosso banco? ");
         String answer = sc.next();
         if (answer.equals("Sim")) {
             System.out.print("Digite o tipo da sua conta: ");
